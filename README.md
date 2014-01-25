@@ -88,22 +88,3 @@ removeTasks: {
     dev: ["server"]
 },
 ```
-
-
-Developing the plugin
----------------------
-
-To install into the local repository:
-
-``mvn install``
-
-
-To install into the nexus repository:
-
-``mvn deploy``
-
-
-TODO
-----
-- Make --no-color configurable
-- Make --force configurable for build goal
