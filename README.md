@@ -1,7 +1,7 @@
 lineman-maven-plugin
 ====================
 
-maven plugin for lineman
+maven plugin for lineman. Heavily inspired by the [yeoman maven plugin](https://github.com/trecloux/yeoman-maven-plugin/)
 
 Using the plugin
 ----------------
