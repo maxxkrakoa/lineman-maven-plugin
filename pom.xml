@@ -24,10 +24,10 @@
 	</licenses>
 
 	<scm>
-        <url>git@github.com:maxxkrakoa/lineman-maven-plugin.git</url>
-        <connection>scm:git@github.com:maxxkrakoa/lineman-maven-plugin.git</connection>
-        <developerConnection>scm:git@github.com:maxxkrakoa/lineman-maven-plugin.git</developerConnection>
-    </scm>
+            <url>git@github.com:maxxkrakoa/lineman-maven-plugin.git</url>
+            <connection>scm:git:git@github.com:maxxkrakoa/lineman-maven-plugin.git</connection>
+            <developerConnection>scm:git:git@github.com:maxxkrakoa/lineman-maven-plugin.git</developerConnection>
+	</scm>
 
 	<developers>
 		<developer>
