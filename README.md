@@ -16,7 +16,7 @@ Insert the following into your ***pom.xml***
 <plugin>
     <groupId>com.github.maxxkrakoa.lineman-maven-plugin</groupId>
     <artifactId>lineman-maven-plugin</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.6</version>
     <executions>
         <execution>
             <id>lineman-clean</id>
@@ -43,6 +43,35 @@ This will take care of running lineman clean, npm clean and lineman build at the
 To start the lineman watch process run ``mvn lineman:run``
 
 To start the lineman test server run ``mvn lineman:spec-ci``
+
+Packaging the war file
+----------------------
+Now configure the ``maven-war-plugin`` to use the output of lineman when packaging the war file. 
+
+Insert the following into your ***pom.xml***
+
+```xml
+<plugin>
+    <groupId>org.apache.maven.plugins</groupId>
+    <artifactId>maven-war-plugin</artifactId>
+    <version>2.1.1</version>
+    <configuration>
+        <warSourceDirectory>${basedir}/src/main/webapp/dist</warSourceDirectory>
+    </configuration>
+</plugin>
+```
+
+Using with jetty
+----------------
+If you want to use lineman with the ``jetty-maven-plugin`` then you need to configure the webapp section of jetty in your ***pom.xml*** similar to this
+
+```xml
+<webApp>
+    <resourceBases>
+        <resourceBase>src/main/webapp/generated</resourceBase>
+    </resourceBases>
+</webApp>
+```
 
 
 Configuring lineman
