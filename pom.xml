@@ -6,8 +6,36 @@
     <packaging>maven-plugin</packaging>
     <version>1.6</version>
     <name>lineman-maven-plugin Maven Mojo</name>
-    <url>http://maven.apache.org</url>
+    <description>maven plugin for lineman</description>
+    <url>https://github.com/maxxkrakoa/lineman-maven-plugin/</url>
+    
+	<parent>
+		<groupId>org.sonatype.oss</groupId>
+		<artifactId>oss-parent</artifactId>
+		<version>7</version>
+	</parent>
+    
+	<licenses>
+		<license>
+			<name>The Apache Software License, Version 2.0</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
 
+	<scm>
+        <url>git@github.com:maxxkrakoa/lineman-maven-plugin.git</url>
+        <connection>scm:git@github.com:maxxkrakoa/lineman-maven-plugin.git</connection>
+        <developerConnection>scm:git@github.com:maxxkrakoa/lineman-maven-plugin.git</cdeveloperCnnection>
+    </scm>
+
+	<developers>
+		<developer>
+			<name>Mads Villadsen</name>
+			<email>maxx@krakoa.dk</email>
+		</developer>
+	</developers>
+  
     <build>
         <plugins>
             <plugin>
