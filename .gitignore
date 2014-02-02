@@ -1,3 +1,7 @@
+.idea
+target/
+lineman-maven-plugin.iml
+
 *.class
 
 # Package Files #
