@@ -26,20 +26,12 @@ import java.io.File;
  */
 
 @Mojo(name = "spec-ci")
-public class LinemanSpecCI extends AbstractMojo {
-    /**
-     * This is the basedir of the project
-     *
-     * @parameter default-value="${basedir}"
-     * @required
-     * @readonly
-     */
-    private File basedir;
+public class LinemanSpecCI extends LinemanBase {
 
     public void execute() throws MojoExecutionException {
         getLog().info("Running lineman spec-ci...");
 
-        File webappDir = new File(basedir, "src/main/webapp/");
+        File webappDir = buildWebappDir();
 
         CommandRunner runner = new CommandRunner();
         // make sure the environment is in place by running npm install

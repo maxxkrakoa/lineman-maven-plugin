@@ -27,20 +27,12 @@ import java.io.File;
  */
 
 @Mojo(name = "clean", defaultPhase = LifecyclePhase.CLEAN)
-public class LinemanClean extends AbstractMojo {
-    /**
-     * This is the basedir of the project
-     *
-     * @parameter default-value="${basedir}"
-     * @required
-     * @readonly
-     */
-    private File basedir;
+public class LinemanClean extends LinemanBase {
 
     public void execute() throws MojoExecutionException {
         getLog().info("Running lineman clean...");
 
-        File webappDir = new File(basedir, "src/main/webapp/");
+        File webappDir = buildWebappDir();
 
         CommandRunner runner = new CommandRunner();
         // make sure the environment is in place by running npm install
