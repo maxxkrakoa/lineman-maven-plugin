@@ -29,24 +29,43 @@ import java.io.File;
 
 public abstract class LinemanBase extends AbstractMojo {
     /**
-     * This is the basedir of the project, the Maven ${basedir} by default.
+     * Specify the basedir of the project, the Maven ${basedir} by default.
      * <p/>
-     * All config paths are relative to this location.<pre>
+     * All configuration paths are relative to this location.<pre>
      *  <plugin>
      *      <groupId>com.github.maxxkrakoa.lineman-maven-plugin</groupId>
      *      <artifactId>lineman-maven-plugin</artifactId>
      *      <configuration>
-     *      <basedir>some_other_dir</basedir>
+     *      <basedir>/some/other/dir</basedir>
      *      </configuration>
      *      ...</pre>
      */
-    @Parameter( defaultValue = "${basedir}", required = true, readonly = true)
+    @Parameter( defaultValue = "${basedir}", required = true, readonly = false)
     protected File basedir;
 
 
-    /** @return the combined basedir/webappPath as a File object, using both defaults and configured values. */
+    /**
+     * Specify the location of the root of the webapp files relative to ${basedir} of the project
+     *
+     * By default, the plugin expects the webapp to live at "${basedir}/src/main/webapp/" per the maven-war-plugin conventions.
+     *
+     * <pre><plugin>
+     *  <groupId>com.github.maxxkrakoa.lineman-maven-plugin</groupId>
+     *  <artifactId>lineman-maven-plugin</artifactId>
+     *  <configuration>
+     *      <webappPath>/my/files/are/here</webappPath>
+     *  </configuration>
+     *  ...</pre>
+     */
+    @Parameter( defaultValue = "src/main/webapp", required = true, readonly = false)
+    protected String webappPath;
+
+
+    /**
+     * @return the combined basedir/webappPath as a File object, using both defaults and configured values.
+     */
     protected File buildWebappDir() {
-        File webappDir = new File(basedir, "src/main/webapp");
+        File webappDir = new File(basedir, webappPath);
         getLog().info("webappDir=" + webappDir.getAbsolutePath());
         return webappDir;
     }
