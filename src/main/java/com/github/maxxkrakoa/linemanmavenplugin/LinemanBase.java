@@ -2,7 +2,9 @@ package com.github.maxxkrakoa.linemanmavenplugin;
 
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
+import org.apache.maven.plugins.annotations.Parameter;
 
 import java.io.File;
 
@@ -25,19 +27,29 @@ import java.io.File;
  * under the License.
  */
 
-@Mojo(name = "run")
-public class LinemanRunServer extends LinemanBase {
+public abstract class LinemanBase extends AbstractMojo {
+    /**
+     * This is the basedir of the project, the Maven ${basedir} by default.
+     * <p/>
+     * All config paths are relative to this location.<pre>
+     *  <plugin>
+     *      <groupId>com.github.maxxkrakoa.lineman-maven-plugin</groupId>
+     *      <artifactId>lineman-maven-plugin</artifactId>
+     *      <configuration>
+     *      <basedir>some_other_dir</basedir>
+     *      </configuration>
+     *      ...</pre>
+     */
+    @Parameter( defaultValue = "${basedir}", required = true, readonly = true)
+    protected File basedir;
 
-    public void execute() throws MojoExecutionException {
-        getLog().info("Running lineman run...");
 
-        File webappDir = buildWebappDir();
-
-        CommandRunner runner = new CommandRunner();
-        // make sure the environment is in place by running npm install
-        runner.run("npm install", webappDir);
-        // run lineman run
-        runner.run("./node_modules/.bin/lineman run --no-color", webappDir);
+    /** @return the combined basedir/webappPath as a File object, using both defaults and configured values. */
+    protected File buildWebappDir() {
+        File webappDir = new File(basedir, "src/main/webapp");
+        getLog().info("webappDir=" + webappDir.getAbsolutePath());
+        return webappDir;
     }
 
 }
+
