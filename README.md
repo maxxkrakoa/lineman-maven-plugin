@@ -6,9 +6,9 @@ maven plugin for lineman. Heavily inspired by the [yeoman maven plugin](https://
 Using the plugin
 ----------------
 
-This plugin assumes that the web part of your project is placed in ``${basedir}/src/main/webapp``
+This plugin by default assumes that the web part of your project is placed in ``${basedir}/src/main/webapp``
 and that there are the needed configuration files for Grunt and npm in this directory
-(Gruntfile.js, package.json and the config directory)
+(Gruntfile.js, package.json and the config directory).
 
 Insert the following into your ***pom.xml***
 
@@ -16,7 +16,7 @@ Insert the following into your ***pom.xml***
 <plugin>
     <groupId>com.github.maxxkrakoa.lineman-maven-plugin</groupId>
     <artifactId>lineman-maven-plugin</artifactId>
-    <version>1.6</version>
+    <version>1.7</version>
     <executions>
         <execution>
             <id>lineman-clean</id>
@@ -43,6 +43,14 @@ This will take care of running lineman clean, npm clean and lineman build at the
 To start the lineman watch process run ``mvn lineman:run``
 
 To start the lineman test server run ``mvn lineman:spec-ci``
+
+If you want to override the path to the webapp directory you can now do the following
+
+```xml
+<configuration>
+    <webappPath>/my/webppath/here</webappPath>
+</configuration>
+```
 
 Packaging the war file
 ----------------------
@@ -88,3 +96,10 @@ removeTasks: {
     dev: ["server"]
 },
 ```
+
+Release notes
+-------------
+
+version 1.7
+-----------
+* Make webapp path configurable (thanks to dcfsc)
