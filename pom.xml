@@ -3,7 +3,7 @@
     <groupId>com.github.maxxkrakoa.lineman-maven-plugin</groupId>
     <artifactId>lineman-maven-plugin</artifactId>
     <packaging>maven-plugin</packaging>
-    <version>1.7</version>
+    <version>1.8-SNAPSHOT</version>
     <name>lineman-maven-plugin Maven Mojo</name>
     <description>maven plugin for lineman</description>
     <url>https://github.com/maxxkrakoa/lineman-maven-plugin/</url>
