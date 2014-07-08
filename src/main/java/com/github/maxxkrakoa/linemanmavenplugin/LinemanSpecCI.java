@@ -1,8 +1,8 @@
 package com.github.maxxkrakoa.linemanmavenplugin;
 
-import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugins.annotations.Mojo;
+import org.apache.maven.plugins.annotations.Parameter;
 
 import java.io.File;
 
@@ -28,18 +28,29 @@ import java.io.File;
 @Mojo(name = "spec-ci")
 public class LinemanSpecCI extends LinemanBase {
 
+    @Parameter( alias = "skipTests", property = "skipTests")
+    protected boolean skipTests;
+
+    @Parameter( alias = "mavenTestSkip", property = "maven.test.skip")
+    protected boolean mavenTestSkip;
+
+
     public void execute() throws MojoExecutionException {
-        getLog().info("Running lineman spec-ci...");
+        if (skipTests || mavenTestSkip) {
+            getLog().info("Tests are skipped");
+        } else {
+            getLog().info("Running lineman spec-ci...");
 
-        File webappDir = buildWebappDir();
+            File webappDir = buildWebappDir();
 
-        CommandRunner runner = new CommandRunner();
-        // make sure the environment is in place by running npm install
-        runner.run("npm install", webappDir);
-        // run lineman spec-ci
-        // TODO: make it configurable to use --force
-        //runner.run("./node_modules/.bin/lineman spec-ci --force --no-color", webappDir);
-        runner.run("./node_modules/.bin/lineman spec-ci --no-color", webappDir);
+            CommandRunner runner = new CommandRunner();
+            // make sure the environment is in place by running npm install
+            runner.run("npm install", webappDir);
+            // run lineman spec-ci
+            // TODO: make it configurable to use --force
+            //runner.run("./node_modules/.bin/lineman spec-ci --force --no-color", webappDir);
+            runner.run("./node_modules/.bin/lineman spec-ci --no-color", webappDir);
+        }
     }
 
 }
