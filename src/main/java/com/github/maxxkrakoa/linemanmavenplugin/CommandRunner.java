@@ -2,11 +2,14 @@ package com.github.maxxkrakoa.linemanmavenplugin;
 
 import org.apache.commons.exec.CommandLine;
 import org.apache.commons.exec.DefaultExecutor;
+import org.apache.commons.exec.environment.EnvironmentUtils;
 import org.apache.commons.lang3.SystemUtils;
 import org.apache.maven.plugin.MojoExecutionException;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -28,19 +31,47 @@ import java.io.IOException;
  */
 
 public class CommandRunner {
+    public void run(String command, File workingDir, List<String> additionalPaths) throws MojoExecutionException {
+            try {
+                if (SystemUtils.IS_OS_WINDOWS) {
+                    command = "cmd /c " + command.replace("/", File.separator);
+                }
 
-    public void run(String command, File workingDir) throws MojoExecutionException {
-        try {
-            if (SystemUtils.IS_OS_WINDOWS) {
-                command = "cmd /c " + command.replace("/", File.separator);
+                CommandLine cmdLine = CommandLine.parse(command);
+
+                DefaultExecutor executor = new DefaultExecutor();
+                executor.setWorkingDirectory(workingDir);
+
+                Map<String, String> environment = EnvironmentUtils.getProcEnvironment();
+
+                if(additionalPaths != null){
+                    String path = environment.get("PATH");
+
+                    if(path == null){
+                        path = new String();
+                    }
+
+                    String pathSeparator = ":";
+
+                    if (SystemUtils.IS_OS_WINDOWS) {
+                        pathSeparator = ";";
+                    }
+
+                    for(String additionalPath : additionalPaths){
+                        if(additionalPath != null) {
+                            path = path + pathSeparator + additionalPath;
+                        }
+                    }
+
+                    System.out.println("PATH=" + path);
+                    environment.put("PATH", path);
+                }
+
+                //TODO: should this return code be inspected and an exception thrown if it is not successful
+                int returnCode = executor.execute(cmdLine, environment);
+            } catch (IOException e) {
+                throw new MojoExecutionException("Error executing command: '" + command + "'",
+                        e);
             }
-            CommandLine cmdLine = CommandLine.parse(command);
-            DefaultExecutor executor = new DefaultExecutor();
-            executor.setWorkingDirectory(workingDir);
-            executor.execute(cmdLine);
-        } catch (IOException e) {
-            throw new MojoExecutionException("Error executing command: '" + command + "'",
-                    e);
         }
-    }
 }

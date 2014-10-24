@@ -1,12 +1,13 @@
 package com.github.maxxkrakoa.linemanmavenplugin;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.maven.plugins.annotations.LifecyclePhase;
-import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -40,15 +41,15 @@ public abstract class LinemanBase extends AbstractMojo {
      *      </configuration>
      *      ...</pre>
      */
-    @Parameter( defaultValue = "${basedir}", required = true, readonly = false)
+    @Parameter(defaultValue = "${basedir}", required = true, readonly = false)
     protected File basedir;
 
 
     /**
      * Specify the location of the root of the webapp files relative to ${basedir} of the project
-     *
+     * <p/>
      * By default, the plugin expects the webapp to live at "${basedir}/src/main/webapp/" per the maven-war-plugin conventions.
-     *
+     * <p/>
      * <pre><plugin>
      *  <groupId>com.github.maxxkrakoa.lineman-maven-plugin</groupId>
      *  <artifactId>lineman-maven-plugin</artifactId>
@@ -57,8 +58,58 @@ public abstract class LinemanBase extends AbstractMojo {
      *  </configuration>
      *  ...</pre>
      */
-    @Parameter( defaultValue = "src/main/webapp", required = true, readonly = false)
+    @Parameter(defaultValue = "src/main/webapp", required = true, readonly = false)
     protected String webappPath;
+
+    /**
+     * Specify the path to the npm installation directory. This is expected to be a standard npm install, the directory defined here should have the npm executable it.
+     * For example you want to define /usr/bin/some/custom/install/npm/bin
+     * <p/>
+     * By default this is empty. Lineman will try and run npm as if it is defined in $PATH
+     * <p/>
+     * <pre><plugin>
+     *  <groupId>com.github.maxxkrakoa.lineman-maven-plugin</groupId>
+     *  <artifactId>lineman-maven-plugin</artifactId>
+     *  <configuration>
+     *      <npmPath>/usr/bin/some/custom/install/npm</npmPath>
+     *  </configuration>
+     *  ...</pre>
+     */
+    @Parameter(defaultValue = "", required = false, readonly = false)
+    protected String npmPath;
+
+    /**
+     * Specify the path to the node installation directory. This is expected to be a standard npm install, the directory defined here should have the node executable it.
+     * For example you want to define /usr/bin/some/custom/install/node
+     *  <p/>
+     * By default this is empty. Lineman will try and run node as if it is defined in $PATH
+     * <p/>
+     * <pre><plugin>
+     *  <groupId>com.github.maxxkrakoa.lineman-maven-plugin</groupId>
+     *  <artifactId>lineman-maven-plugin</artifactId>
+     *  <configuration>
+     *      <nodePath>/usr/bin/some/custom/install/node</nodePath>
+     *  </configuration>
+     *  ...</pre>
+     */
+    @Parameter(defaultValue = "", required = false, readonly = false)
+    protected String nodePath;
+
+    /**
+     * run node install
+     *
+     * By default this is true. Lineman will try and run npm install first
+     * <p/>
+     * <pre><plugin>
+     *  <groupId>com.github.maxxkrakoa.lineman-maven-plugin</groupId>
+     *  <artifactId>lineman-maven-plugin</artifactId>
+     *  <configuration>
+     *      <runNpmInstall>true</runNpmInstall>
+     *  </configuration>
+     *  ...</pre>
+     */
+    @Parameter(defaultValue = "true", required = false, readonly = false)
+    protected boolean runNpmInstall;
 
 
     /**
@@ -70,5 +121,32 @@ public abstract class LinemanBase extends AbstractMojo {
         return webappDir;
     }
 
+    protected List<String> buildAdditionalPaths() {
+        List<String> additionalPaths = new ArrayList<String>();
+
+        if (StringUtils.isNotBlank(npmPath)) {
+            additionalPaths.add(new File(basedir, npmPath).getAbsolutePath());
+        }
+
+        if (StringUtils.isNotBlank(nodePath)) {
+            additionalPaths.add(new File(basedir, nodePath).getAbsolutePath());
+        }
+
+        return additionalPaths;
+    }
+
+    /**
+     * Run `npm install` using the configured or default npmInstallPath
+     *
+     * @param runner a CommandRunner to use to run the command
+     * @throws MojoExecutionException
+     */
+    protected void npmInstall(CommandRunner runner) throws MojoExecutionException {
+        if(runNpmInstall) {
+            //TODO: this does not seem to work see https://github.com/maxxkrakoa/lineman-maven-plugin/issues/8
+            getLog().info("Running npm install with npm path=" + npmPath + "and node path=" + nodePath);
+            runner.run("npm install", buildWebappDir(), buildAdditionalPaths());
+        }
+    }
 }
 
