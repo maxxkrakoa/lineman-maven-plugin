@@ -1,6 +1,5 @@
 package com.github.maxxkrakoa.linemanmavenplugin;
 
-import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugins.annotations.Mojo;
 
@@ -35,9 +34,9 @@ public class LinemanRunServer extends LinemanBase {
 
         CommandRunner runner = new CommandRunner();
         // make sure the environment is in place by running npm install
-        runner.run("npm install", webappDir);
+        npmInstall(runner);
         // run lineman run
-        runner.run("./node_modules/.bin/lineman run --no-color", webappDir);
+        runner.run("./node_modules/.bin/lineman run --no-color", webappDir, buildAdditionalPaths());
     }
 
 }

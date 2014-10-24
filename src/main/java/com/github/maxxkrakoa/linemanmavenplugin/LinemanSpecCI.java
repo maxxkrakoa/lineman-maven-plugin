@@ -45,11 +45,11 @@ public class LinemanSpecCI extends LinemanBase {
 
             CommandRunner runner = new CommandRunner();
             // make sure the environment is in place by running npm install
-            runner.run("npm install", webappDir);
+            npmInstall(runner);
             // run lineman spec-ci
             // TODO: make it configurable to use --force
             //runner.run("./node_modules/.bin/lineman spec-ci --force --no-color", webappDir);
-            runner.run("./node_modules/.bin/lineman spec-ci --no-color", webappDir);
+            runner.run("./node_modules/.bin/lineman spec-ci --no-color", webappDir, buildAdditionalPaths());
         }
     }
 
